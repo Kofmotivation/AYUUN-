@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4efe6;
+  --foreground: #231d19;
+  --accent: #6b1d2f;
+  --muted: #8a7d58;
+  --body: #4a403a;
+  --stone: #d9cfbf;
+  --cream: #fbf8f2;
+  --gold: #c9b98f;
+  --archive: #231d19;
+  --archive-fg: #f4efe6;
+  --archive-muted: #d9cebd;
+  --ease-lux: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-body: var(--body);
+  --color-stone: var(--stone);
+  --color-cream: var(--cream);
+  --color-gold: var(--gold);
+  --color-archive: var(--archive);
+  --color-archive-fg: var(--archive-fg);
+  --color-archive-muted: var(--archive-muted);
+  --font-sans: var(--font-plus-jakarta);
+  --font-serif: var(--font-cormorant);
+  --font-mono: var(--font-jetbrains);
+  --ease-lux: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+html.cc,
+html.cc * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-plus-jakarta), Helvetica, Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+#archive a:hover {
+  color: var(--gold);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.font-serif {
+  font-family: var(--font-cormorant), Georgia, serif;
+}
+
+.font-mono {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+.text-meta {
+  font-size: 10.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.site-pad-x {
+  padding-left: clamp(20px, 4vw, 56px);
+  padding-right: clamp(20px, 4vw, 56px);
+}
+
+/* Pre-hydration motion defaults (GSAP takes over after mount) */
+@media (prefers-reduced-motion: no-preference) {
+  [data-fade-in],
+  [data-fade] {
+    opacity: 0;
+  }
+
+  [data-hero-cover] {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  [data-line] {
+    transform: translate3d(0, 110%, 0);
+    transition: none;
+  }
+
+  [data-line].is-in {
+    transform: translate3d(0, 0, 0);
+    transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-line] {
+    transform: none;
+  }
+}
+
+#archive {
+  color-scheme: dark;
+}
