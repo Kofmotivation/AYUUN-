@@ -37,6 +37,15 @@ export function SiteMotion() {
         Array.from(document.querySelectorAll(s)) as HTMLElement[];
       const lenis = getLenis();
 
+      // Homepage-only motion: skip pin/scrub work on shop & editorial routes.
+      const isHome = Boolean(q("[data-hero]"));
+      if (!isHome) {
+        const pl = q("[data-pl]");
+        if (pl) pl.style.display = "none";
+        ScrollTrigger.getAll().forEach((st) => st.kill());
+        return;
+      }
+
       ctx = gsap.context(() => {
         const pl = q("[data-pl]");
 
@@ -287,21 +296,31 @@ export function SiteMotion() {
 
         onLoad = () => ScrollTrigger.refresh();
         window.addEventListener("load", onLoad);
+        // Single coalesced refresh after images — avoid stacked 1.2s/3.2s thrash.
         const images = qa("img");
         let pending = images.length;
+        let refreshed = false;
+        const doRefresh = () => {
+          if (refreshed || cancelled) return;
+          refreshed = true;
+          ScrollTrigger.refresh();
+        };
         const maybeRefresh = () => {
           pending -= 1;
-          if (pending <= 0) ScrollTrigger.refresh();
+          if (pending <= 0) doRefresh();
         };
-        images.forEach((img) => {
-          if ((img as HTMLImageElement).complete) maybeRefresh();
-          else {
-            img.addEventListener("load", maybeRefresh, { once: true });
-            img.addEventListener("error", maybeRefresh, { once: true });
-          }
-        });
-        t = window.setTimeout(() => ScrollTrigger.refresh(), 1200);
-        t2 = window.setTimeout(() => ScrollTrigger.refresh(), 3200);
+        if (images.length === 0) {
+          t = window.setTimeout(doRefresh, 200);
+        } else {
+          images.forEach((img) => {
+            if ((img as HTMLImageElement).complete) maybeRefresh();
+            else {
+              img.addEventListener("load", maybeRefresh, { once: true });
+              img.addEventListener("error", maybeRefresh, { once: true });
+            }
+          });
+          t2 = window.setTimeout(doRefresh, 2500);
+        }
       });
     };
 
