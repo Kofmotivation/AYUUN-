@@ -1,6 +1,12 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 export function Preloader() {
+  const pathname = usePathname();
+  // Keep the branded intro on `/` only — other routes start immediately.
+  if (pathname !== "/") return null;
+
   return (
     <div
       data-pl="1"
